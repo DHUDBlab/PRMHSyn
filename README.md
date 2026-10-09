@@ -2,8 +2,6 @@
 
 We introduce **PRMHSyn**, a PageRank-enhanced relational multimodal hypergraph learning framework for predicting anti-cancer drug synergy.
 
-PRMHSyn integrates drug, cell line, disease, and protein information into a relational hypergraph. PageRank-enhanced message passing captures global topological importance, while a molecular graph encoder and a Cross-Gated FiLM decoder are used to predict cell-line-specific drug synergy.
-
 ## Requirements
 
 - Python 3.9.22
