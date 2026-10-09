@@ -1,0 +1,83 @@
+Tissue,Cell_Line
+Large Intestine,SW-620
+Large Intestine,HT29
+Large Intestine,HCT116
+Large Intestine,HCT-15
+Large Intestine,KM12
+Large Intestine,COLO 205
+Large Intestine,HCC-2998
+Large Intestine,LOVO
+Large Intestine,SW837
+Large Intestine,RKO
+Breast,T-47D
+Breast,MDA-MB-231
+Breast,MCF7
+Breast,BT-549
+Breast,MDA-MB-468
+Breast,HS 578T
+Breast,OCUBM
+Breast,MDAMB436
+Lymphoid,K-562
+Lymphoid,CCRF-CEM
+Lymphoid,SR
+Lymphoid,MOLT-4
+Lymphoid,RPMI-8226
+Lymphoid,L-1236
+Lymphoid,HDLM-2
+Lymphoid,L-428
+Kidney,ACHN
+Kidney,SN12C
+Kidney,TK-10
+Kidney,A498
+Kidney,786-0
+Kidney,CAKI-1
+Kidney,UO-31
+Kidney,RXF 393
+Lung,NCIH23
+Lung,NCI-H226
+Lung,A549
+Lung,EKVX
+Lung,NCI-H322M
+Lung,NCI-H522
+Lung,HOP-92
+Lung,HOP-62
+Lung,A427
+Lung,SKMES1
+Lung,NCIH2122
+Lung,NCIH520
+Lung,NCIH1650
+Ovary,SK-OV-3
+Ovary,OVCAR3
+Ovary,OVCAR-5
+Ovary,IGROV1
+Ovary,OVCAR-8
+Ovary,OVCAR-4
+Ovary,A2780
+Ovary,PA1
+Ovary,ES2
+Ovary,UWB1289
+Ovary,OV90
+Skin,UACC62
+Skin,UACC-257
+Skin,SK-MEL-28
+Skin,SK-MEL-5
+Skin,M14
+Skin,LOX IMVI
+Skin,SK-MEL-2
+Skin,A375
+Skin,RPMI7951
+Skin,A2058
+Skin,HT144
+Brain,SF-268
+Brain,U251
+Brain,SF-539
+Brain,SF-295
+Brain,SNB-75
+Brain,T98G
+Prostate,PC-3
+Prostate,DU-145
+Prostate,VCAP
+Bone,A-673
+Bone,TC-71
+Soft,RD
+
