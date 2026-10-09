@@ -1,0 +1,22 @@
+# Dataset files
+Data/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Training outputs
+checkpoints/
+output_*.txt
+joint_features_*.npy
+mlruns/
+
+# Local environments and editors
+.venv/
+venv/
+env/
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
