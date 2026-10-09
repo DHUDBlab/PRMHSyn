@@ -253,95 +253,6 @@ def test(model, drug_features, cell_line_feature, disease_feature, data, edges, 
 
 
 # -----------------------------
-#   Feature extraction for visualization
-# -----------------------------
-def extract_joint_features(
-    model,
-    drug_features,
-    cell_line_feature,
-    disease_feature,
-    data,
-    edges,
-    labels,
-    file_prefix="joint_features",
-):
-    """
-    Extract joint features (before and after model encoding) on a given split
-    for dimensionality reduction visualization (e.g., t-SNE / UMAP).
-
-    Joint raw feature for a sample (drugA, drugB, cell):
-        [Drug_Features[drugA] || Drug_Features[drugB] || Cell_Line_Feature[cell]]
-
-    Joint processed feature:
-        [drug_emb[drugA] || drug_emb[drugB] || cell_emb[cell]]
-    """
-    model.eval()
-    all_raw = []
-    all_proc = []
-    all_y = []
-
-    with torch.no_grad():
-        # preds is not used here; we only need embeddings
-        preds, _, _, drug_emb, cell_emb = model(
-            drug_features, cell_line_feature, disease_feature, edges
-        )
-
-        # drug_features / cell_line_feature are tensors on device
-        # embeddings are also tensors on device
-        for idx in range(data.numDrug, data.numDrug + data.CellsCount):
-            if idx not in edges or len(edges[idx]) == 0:
-                continue
-            if idx not in labels or len(labels[idx]) == 0:
-                continue
-
-            cell_local_id = idx - data.numDrug
-            cell_raw = cell_line_feature[cell_local_id]
-            cell_enc = cell_emb[cell_local_id]
-
-            edge_list = edges[idx]
-            label_list = labels[idx]
-
-            # ensure we iterate over pairs of (drugA, drugB, y)
-            for (a, b), y in zip(edge_list, label_list):
-                a = int(a)
-                b = int(b)
-                y = int(y)
-
-                drugA_raw = drug_features[a]
-                drugB_raw = drug_features[b]
-                drugA_enc = drug_emb[a]
-                drugB_enc = drug_emb[b]
-
-                joint_raw = torch.cat(
-                    [drugA_raw, drugB_raw, cell_raw], dim=0
-                ).detach().cpu().numpy()
-                joint_proc = torch.cat(
-                    [drugA_enc, drugB_enc, cell_enc], dim=0
-                ).detach().cpu().numpy()
-
-                all_raw.append(joint_raw)
-                all_proc.append(joint_proc)
-                all_y.append(y)
-
-    if len(all_raw) == 0:
-        print(f"[FeatureExtract] No samples found for {file_prefix}, skip saving.")
-        return
-
-    all_raw = np.asarray(all_raw)
-    all_proc = np.asarray(all_proc)
-    all_y = np.asarray(all_y, dtype=int)
-
-    np.save(f"{file_prefix}_raw.npy", all_raw)
-    np.save(f"{file_prefix}_proc.npy", all_proc)
-    np.save(f"{file_prefix}_labels.npy", all_y)
-    print(
-        f"[FeatureExtract] Saved: {file_prefix}_raw.npy, "
-        f"{file_prefix}_proc.npy, {file_prefix}_labels.npy "
-        f"(num_samples={len(all_y)})"
-    )
-
-
-# -----------------------------
 #           Train
 # -----------------------------
 def train(model, drug_features, cell_line_feature, disease_feature,
@@ -709,20 +620,6 @@ def run_training():
                 Data,
                 Data.test_edges,
                 Data.test_labels
-            )
-
-            # ---------- Feature extraction for visualization (default: on test set) ----------
-            # 导出“训练前原始联合特征”和“训练后联合嵌入特征”用于降维可视化
-            feature_prefix = f"joint_features_{args.dataset}_fold{fold + 1}"
-            extract_joint_features(
-                Model,
-                Drug_Features,
-                Cell_Line_Feature,
-                Disease_Feature,
-                Data,
-                Data.test_edges,
-                Data.test_labels,
-                file_prefix=feature_prefix,
             )
 
             # 1) 在测试集上使用固定阈值 0.5 计算一套指标（便于对比）
