@@ -237,6 +237,8 @@ class rhgcnConv(nn.Module):
         self.use_norm = use_norm
         self.use_pagerank = use_pagerank
         self.degV_dict = degV_dict
+        # The hypergraph is fixed for one model instance, so its PageRank is too.
+        self._pagerank = None
 
     def reset_parameters(self):
         for layer in self.W:
@@ -246,16 +248,18 @@ class rhgcnConv(nn.Module):
 
     def forward(self, X, vertex, edges):
         X0 = self.W[0](X)
-        # 计算PageRank分数（可消融）
         if self.use_pagerank:
-            pr = pagerank_score_sparse(
-                X.shape[0],
-                vertex.cpu().numpy(),
-                edges.cpu().numpy(),
-                device=X.device
-            )  # [N,1]
+            if (self._pagerank is None or
+                    self._pagerank.shape[0] != X.shape[0] or
+                    self._pagerank.device != X.device):
+                self._pagerank = pagerank_score_sparse(
+                    X.shape[0],
+                    vertex.cpu().numpy(),
+                    edges.cpu().numpy(),
+                    device=X.device
+                )
+            pr = self._pagerank.to(dtype=X.dtype)
         else:
-            # 消融时：令 PR=1，等价于去掉 PageRank 加权
             pr = torch.ones((X.shape[0], 1), device=X.device, dtype=X.dtype)
 
 

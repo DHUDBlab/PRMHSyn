@@ -14,7 +14,6 @@ import Data_Process
 import Synergy_Models
 import torch
 import torch.nn as nn
-import re
 from sklearn.metrics import (
     roc_auc_score,
     average_precision_score,
@@ -28,22 +27,9 @@ from sklearn.metrics import (
 )
 import Config
 import time
-from datetime import datetime
 import os.path as osp
 
 args = Config.parse()
-
-def _sanitize_mlflow_experiment_name(name: str) -> str:
-    """
-    MLflow FileStore 会把实验名拼到 filter_string 里解析。
-    为避免解析失败（例如名字中含逗号、空格、中文、引号等），这里将实验名规范化：
-    仅保留 [A-Za-z0-9._-]，其它字符统一替换为下划线。
-    """
-    if name is None:
-        return "PRMHSyn"
-    safe = re.sub(r"[^0-9A-Za-z._-]+", "_", str(name)).strip("_")
-    return safe if safe else "PRMHSyn"
-
 
 # -----------------------------
 #      EarlyStopping Class
@@ -101,7 +87,7 @@ class EarlyStopping:
             self.counter = 0
             
             # Save checkpoint
-            self.checkpoint_path = osp.join(self.checkpoint_dir, f'best_model_epoch_{self.best_epoch}.pth')
+            self.checkpoint_path = osp.join(self.checkpoint_dir, 'best_model.pth')
             torch.save({
                 'epoch': self.best_epoch,
                 'model_state_dict': model.state_dict(),
@@ -505,13 +491,6 @@ def train(model, drug_features, cell_line_feature, disease_feature,
 
 
 # -----------------------------
-#    Parameter counting
-# -----------------------------
-def count_parameters(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
-
-
-# -----------------------------
 #             Main
 # -----------------------------
 def run_training():
@@ -689,7 +668,6 @@ def run_training():
             else:
                 scheduler = None
 
-            _ = count_parameters(Model)
 
             # ---------- Train ----------
             # Train function now returns the model (with best checkpoint loaded) and best_epoch
@@ -863,7 +841,6 @@ def run_training():
             file.write(f"Dataset: {args.dataset}\n")
             file.write(f"Learning Rate: {args.learning_rate}\n")
             file.write(f"Weight Decay: {args.weight_decay}\n")
-            file.write(f"Alpha: {args.alpha}\n")
             file.write(f"Epochs: {args.epochs}\n")
             file.write(f"K-Fold: {args.k_fold}\n")
             file.write("=" * 50 + "\n")

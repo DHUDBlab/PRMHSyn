@@ -32,8 +32,6 @@ def parse():
     p.add_argument('--threshold',type = int, default = 30,help = 'the threshold of positive samples') # 30, 10
     p.add_argument('--k_fold', type = int, default = 10, help = 'k-fold cross validation')
     p.add_argument('--cuda', type = str, default = '0', help = 'gpu id to use')
-    p.add_argument('--alpha', type = float, default = 0.2, help = 'the parameters of the auxiliary task') # 0.2, 0.3
-    p.add_argument('--mask_ratio', type = float, default = 0.2, help = 'the parameters of the auxiliary task') # 0.2, 0.3
     p.add_argument('--learning_rate', type = float, default = 1e-3, help = 'learning rate')
     p.add_argument('--weight_decay', type = float, default = 1e-6, help = 'weight decay')
     p.add_argument('--epochs', type = int, default = 2000, help = 'number of epochs to train')
@@ -71,7 +69,7 @@ def parse():
     #  早停（Early Stopping）
     # -----------------------------
     # patience：验证指标连续多少个 epoch 没提升就停止
-    p.add_argument('--early_stop_patience', type=int, default=500, help='早停耐心值（patience）')
+    p.add_argument('--early_stop_patience', type=int, default=200, help='早停耐心值（patience）')
     # 监控的验证指标（与 PRMHSyn.py 中 metric_map 的 key 对齐）
     p.add_argument(
         '--early_stop_monitor',
